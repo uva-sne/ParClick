@@ -1,0 +1,9 @@
+# JetBrains IDE
+.idea/
+
+# Applications
+*.app
+*.exe
+*.war
+
+/cmake-build-debug/
