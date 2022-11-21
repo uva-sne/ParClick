@@ -77,11 +77,10 @@ std::vector<SearchResult>& SearchSession::get_sr() {
 
 int SearchSession::get_last_click_rank() {
     int last_click_rank{10};
-    for (auto asr: this->sr)
-    {
-        if (asr.get_click() == 1)
-        {
-            last_click_rank = asr.get_doc_rank();
+    for (int rank = 9; rank >= 0; --rank) {
+        if (this->sr[rank].get_click() == 1) {
+            last_click_rank = rank;
+            break;
         }
     }
     return last_click_rank;
@@ -100,26 +99,15 @@ int SearchSession::get_num_clicks() {
 }
 
 std::array<int, 10> SearchSession::prev_clicked_rank() {
-    std::vector<int> prev_clicks;
     std::array<int, 10> prev_click_rank{0};
     std::array<int, 10> clicks = this->get_clicks();
+    int last_click_rank{9};
 
-    for (int rank_cnt{0}; rank_cnt < 10; rank_cnt++){
-        int max_itr_rank = rank_cnt;
-        int itr{0};
-        std::vector<int> temp_clicks;
-        for (auto a_click: clicks){
-            if (itr < max_itr_rank){
-                if (a_click == 1){
-                    temp_clicks.push_back(itr);
-                }
-                itr++;
-            }
-        }
-        if (!temp_clicks.empty()){
-            prev_click_rank[rank_cnt] = temp_clicks.back();
-        } else{
-            prev_click_rank[rank_cnt] = 9;
+    for (int rank = 0; rank < 10; rank++) {
+        prev_click_rank[rank] = last_click_rank;
+
+        if (clicks[rank] == 1) {
+            last_click_rank = rank;
         }
     }
 
